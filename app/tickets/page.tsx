@@ -1,13 +1,13 @@
+import prisma from "@/prisma/db";
 import React from "react";
+import DataTable from "./DataTable";
 
-function sleep() {
-  return new Promise((resolve) => setTimeout(resolve, 5000));
-}
 const Tickets = async () => {
-  await sleep();
+  const tickets = await prisma.ticket.findMany();
+
   return (
     <div>
-      <h1>Tickets</h1>
+      <DataTable tickets={tickets} />
     </div>
   );
 };
