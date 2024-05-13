@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "./ui/form";
 import { Input } from "./ui/input";
 import { z } from "zod";
@@ -16,16 +16,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { Button } from "./ui/button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type TicketFormData = z.infer<typeof ticketSchema>;
 
 const TicketForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
   const form = useForm<TicketFormData>({
     resolver: zodResolver(ticketSchema),
   });
 
   async function onSubmit(values: z.infer<typeof ticketSchema>) {
-    console.log(values);
+    try {
+      console.log(values);
+      setError("");
+      await axios.post("/api/tickets", values);
+      setIsSubmitting(true);
+
+      router.push("/tickets");
+    } catch (error) {
+      setError("Unknown error occoured");
+
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -108,6 +126,9 @@ const TicketForm = () => {
               )}
             />
           </div>
+          <Button type="submit" disabled={isSubmitting}>
+            Submit
+          </Button>
         </form>
       </Form>
     </div>
