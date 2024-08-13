@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Page renders homepage unchanged 1`] = `
+<div>
+  <div>
+    <h1>
+      Dashboard
+    </h1>
+  </div>
+</div>
+`;
