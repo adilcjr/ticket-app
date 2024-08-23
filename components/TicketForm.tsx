@@ -38,7 +38,7 @@ const TicketForm = ({ ticket }: Props) => {
 
   async function onSubmit(values: z.infer<typeof ticketSchema>) {
     try {
-      console.log(values);
+      setIsSubmitting(true);
       setError("");
 
       if (ticket) {
@@ -46,9 +46,10 @@ const TicketForm = ({ ticket }: Props) => {
       } else {
         await axios.post("/api/tickets", values);
       }
-      setIsSubmitting(true);
+      setIsSubmitting(false);
 
       router.push("/tickets");
+      router.refresh();
     } catch (error) {
       setError("Unknown error occoured");
 

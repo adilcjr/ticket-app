@@ -1,6 +1,7 @@
-import { ticketSchema } from "@/ValidationSchemas/tickets";
+import { ticketPatchSchema } from "@/ValidationSchemas/tickets";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/prisma/db";
+import { parse } from "path";
 
 interface Props {
   params: { id: string };
@@ -8,10 +9,14 @@ interface Props {
 
 export async function PATCH(request: NextRequest, { params }: Props) {
   const body = await request.json();
-  const validation = ticketSchema.safeParse(body);
+  const validation = ticketPatchSchema.safeParse(body);
 
   if (!validation.success) {
     return NextResponse.json(validation.error.format(), { status: 400 });
+  }
+
+  if (body.userId) {
+    body.userId = parseInt(body.userId);
   }
 
   const ticket = await prisma.ticket.findUnique({
